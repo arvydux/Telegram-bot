@@ -21,7 +21,7 @@ Route::post('/webhook', function() {
     );
 
 
-    $bot->onCallbackQueryData('number {param}', function (Nutgram $bot, $param) {
+    $bot->onMessage(function (Nutgram $bot, $param) {
         $bot->sendMessage(
             text: 'Choose an option: 222',
             chat_id: 2091649713);
