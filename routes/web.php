@@ -9,37 +9,10 @@ use SergiX44\Nutgram\Telegram\Types\Message\Message;
 Route::post('/webhook', function() {
     $bot = new Nutgram($_ENV['TELEGRAM_TOKEN']);
 
-
-    $bot->sendMessage(
-        text: 'Choose an option:6666666',
-        chat_id: 2091649713,
-        reply_markup: InlineKeyboardMarkup::make()->addRow(
-            InlineKeyboardButton::make('One', callback_data: 'number 1'),
-            InlineKeyboardButton::make('Two', callback_data: 'number 2'),
-            InlineKeyboardButton::make('Cancel', callback_data: 'cancel'),
-        )
-    );
-
-    $bot->sendMessage(
-        text: 'Choose an option:44444446666666',
-        chat_id: 2091649713
-    );
-
-    $bot->onMessage(function (Nutgram $bot, $param) {
-        $bot->sendMessage(
-            text: 'Choose an option: 222',
-            chat_id: 2091649713);
-        $bot->answerCallbackQuery();
+// called on text "I want 6 portions of cake" (regex)
+    $bot->onText('I want ([0-9]+) (pizza|cake)', function (Nutgram $bot, string $amount, string $dish) {
+        $bot->sendMessage("You will get {$amount} portions of {$dish}!");
     });
-
-    $bot->onCallbackQueryData('cancel', function (Nutgram $bot) {
-        $bot->sendMessage(
-            text: 'Choose an option: 33333',
-            chat_id: 2091649713);
-        $bot->answerCallbackQuery();
-    });
-
-    $bot->run();
 
     return view('welcome');
 })->withoutMiddleware([\Illuminate\Foundation\Http\Middleware\VerifyCsrfToken::class]);
