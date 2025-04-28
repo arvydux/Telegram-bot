@@ -42,16 +42,6 @@ Route::post('/webhook', function() {
     $bot = new Nutgram($_ENV['TELEGRAM_TOKEN']);
 
 
-    $bot->sendMessage(
-        text: 'Welcome!aaaaaaaaa',
-        chat_id: 2091649713,
-        reply_markup: InlineKeyboardMarkup::make()
-            ->addRow(
-                InlineKeyboardButton::make('A', callback_data: 'type:a'),
-                InlineKeyboardButton::make('B', callback_data: 'type:b')
-            ),
-    //chat_id: $_ENV['TELEGRAM_CHAT_ID']
-    );
 
 
     $bot->onCallbackQueryData('type:a', function(Nutgram $bot){
