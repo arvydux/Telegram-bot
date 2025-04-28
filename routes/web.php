@@ -46,13 +46,15 @@ Route::post('/webhook', function() {
 
     $bot->onCommand('type:a', function(Nutgram $bot){
         $bot->sendMessage(
-            text: 'You selected A'
+            text: 'You selected A',
+            chat_id: 2091649713
         );
     });
 
     $bot->onCommand('type:b', function(Nutgram $bot){
         $bot->sendMessage(
-            text: 'You selected B'
+            text: 'You selected B',
+            chat_id: 2091649713
         );
     });
 
