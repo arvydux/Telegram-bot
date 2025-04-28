@@ -41,56 +41,61 @@ Route::get('/', function () {
 Route::post('/webhook', function() {
     $bot = new Nutgram($_ENV['TELEGRAM_TOKEN']);
 
-
-
-
-    $bot->onCommand('type:a', function(Nutgram $bot){
+    $bot->onCommand('start', function (Nutgram $bot) {
         $bot->sendMessage(
-            text: 'You selected A',
-            chat_id: 2091649713
+            text: 'Choose an option:',
+            reply_markup: InlineKeyboardMarkup::make()->addRow(
+                InlineKeyboardButton::make('One', callback_data: 'number 1'),
+                InlineKeyboardButton::make('Two', callback_data: 'number 2'),
+                InlineKeyboardButton::make('Cancel', callback_data: 'cancel'),
+            )
         );
     });
 
-    $bot->onCommand('type:b', function(Nutgram $bot){
-        $bot->sendMessage(
-            text: 'You selected B',
-            chat_id: 2091649713
-        );
+    $bot->onCallbackQueryData('number {param}', function (Nutgram $bot, $param) {
+        $bot->sendMessage($param); // 1 or 2
+        $bot->answerCallbackQuery();
     });
+
+    $bot->onCallbackQueryData('cancel', function (Nutgram $bot) {
+        $bot->sendMessage('Canceled!');
+        $bot->answerCallbackQuery();
+    });
+
+    $bot->run();
 
     return view('welcome');
 })->withoutMiddleware([\Illuminate\Foundation\Http\Middleware\VerifyCsrfToken::class]);
 
-Route::get('/webhook', function() {
+Route::get('/', function() {
     $bot = new Nutgram($_ENV['TELEGRAM_TOKEN']);
 
-
-    $bot->sendMessage(
-        text: 'Welcome!',
-        chat_id: 2091649713,
-        reply_markup: InlineKeyboardMarkup::make()
-            ->addRow(
-                InlineKeyboardButton::make('A', callback_data: 'type:a'),
-                InlineKeyboardButton::make('B', callback_data: 'type:b')
-            ),
-    //chat_id: $_ENV['TELEGRAM_CHAT_ID']
-    );
-
-
-    $bot->onCallbackQueryData('type:a', function(Nutgram $bot){
+    $bot->onCommand('start', function (Nutgram $bot) {
         $bot->sendMessage(
-            text: 'You selected A'
+            text: 'Choose an option:',
+            reply_markup: InlineKeyboardMarkup::make()->addRow(
+                InlineKeyboardButton::make('One', callback_data: 'number 1'),
+                InlineKeyboardButton::make('Two', callback_data: 'number 2'),
+                InlineKeyboardButton::make('Cancel', callback_data: 'cancel'),
+            )
         );
     });
 
-    $bot->onCallbackQueryData('type:b', function(Nutgram $bot){
-        $bot->sendMessage(
-            text: 'You selected B'
-        );
+    $bot->onCallbackQueryData('number {param}', function (Nutgram $bot, $param) {
+        $bot->sendMessage($param); // 1 or 2
+        $bot->answerCallbackQuery();
     });
+
+    $bot->onCallbackQueryData('cancel', function (Nutgram $bot) {
+        $bot->sendMessage('Canceled!');
+        $bot->answerCallbackQuery();
+    });
+
+    $bot->run();
 
     return view('welcome');
 })->withoutMiddleware([\Illuminate\Foundation\Http\Middleware\VerifyCsrfToken::class]);
+
 
 Route::get('/set-webhook', function () {
     $bot = new Nutgram($_ENV['TELEGRAM_TOKEN']);
