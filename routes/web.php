@@ -6,19 +6,32 @@ use SergiX44\Nutgram\Telegram\Types\Keyboard\InlineKeyboardButton;
 use SergiX44\Nutgram\Telegram\Types\Keyboard\InlineKeyboardMarkup;
 use SergiX44\Nutgram\Telegram\Types\Message\Message;
 
-Route::post('/webhook', function() {
+
+
+Route::post('/webhook', function () {
     $bot = new Nutgram($_ENV['TELEGRAM_TOKEN']);
 
-// called on text "I want 6 portions of cake" (regex)
-    $bot->onText('I want', function (Nutgram $bot, string $amount, string $dish) {
-        $bot->sendMessage("You");
+    // Handle the /start command
+    $bot->onCommand('start', function (Nutgram $bot) {
+        $bot->sendMessage('Welcome to the bot! Use /help to see available commands.');
     });
 
+    // Handle the /help command
+    $bot->onCommand('help', function (Nutgram $bot) {
+        $bot->sendMessage("Here are the available commands:\n/start - Start the bot\n/help - Show this help message\n/about - Learn more about the bot");
+    });
+
+    // Handle the /about command
+    $bot->onCommand('about', function (Nutgram $bot) {
+        $bot->sendMessage('This is a sample Telegram bot built using Nutgram.');
+    });
+
+    // Process the incoming update
     $bot->run();
+    
 
     return response('OK');
 })->withoutMiddleware([\Illuminate\Foundation\Http\Middleware\VerifyCsrfToken::class]);
-
 
 Route::get('/webhook', function() {
     $bot = new Nutgram($_ENV['TELEGRAM_TOKEN']);
