@@ -23,13 +23,13 @@ Route::get('/', function () {
         );
 
 
-    $bot->onCallbackQueryData('type:a', function(Nutgram $bot){
+    $bot->onCommand('type:a', function(Nutgram $bot){
         $bot->sendMessage(
             text: 'You selected A'
         );
     });
 
-    $bot->onCallbackQueryData('type:b', function(Nutgram $bot){
+    $bot->onCommand('type:b', function(Nutgram $bot){
         $bot->sendMessage(
             text: 'You selected B'
         );
@@ -44,13 +44,13 @@ Route::post('/webhook', function() {
 
 
 
-    $bot->onCallbackQueryData('type:a', function(Nutgram $bot){
+    $bot->onCommand('type:a', function(Nutgram $bot){
         $bot->sendMessage(
             text: 'You selected A'
         );
     });
 
-    $bot->onCallbackQueryData('type:b', function(Nutgram $bot){
+    $bot->onCommand('type:b', function(Nutgram $bot){
         $bot->sendMessage(
             text: 'You selected B'
         );
