@@ -2,7 +2,13 @@
 
 use Illuminate\Foundation\Inspiring;
 use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Facades\Schedule;
+use SergiX44\Nutgram\Nutgram;
 
-Artisan::command('inspire', function () {
-    $this->comment(Inspiring::quote());
-})->purpose('Display an inspiring quote');
+Schedule::call(function () {
+    $bot = new Nutgram($_ENV['TELEGRAM_TOKEN']);
+
+
+    // Handle the /start comman
+    $bot->sendMessage('Welcome to the bot! Use /help to see available commands.');
+})->everySecond();
