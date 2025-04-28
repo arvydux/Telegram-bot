@@ -15,8 +15,8 @@ Route::post('/webhook', function() {
     });
 
     $bot->run();
-    
-    return view('welcome');
+
+    return response('OK');
 })->withoutMiddleware([\Illuminate\Foundation\Http\Middleware\VerifyCsrfToken::class]);
 
 
