@@ -10,8 +10,8 @@ Route::post('/webhook', function() {
     $bot = new Nutgram($_ENV['TELEGRAM_TOKEN']);
 
 // called on text "I want 6 portions of cake" (regex)
-    $bot->onText('I want ([0-9]+) (pizza|cake)', function (Nutgram $bot, string $amount, string $dish) {
-        $bot->sendMessage("You will get {$amount} portions of {$dish}!");
+    $bot->onText('I want', function (Nutgram $bot, string $amount, string $dish) {
+        $bot->sendMessage("You");
     });
 
     $bot->run();
