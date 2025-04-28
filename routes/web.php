@@ -38,7 +38,38 @@ Route::get('/', function () {
     return view('welcome');
 })->withoutMiddleware([\Illuminate\Foundation\Http\Middleware\VerifyCsrfToken::class]);
 
-Route::post('/curl "https://api.telegram.org/bot<YOUR_TELEGRAM_BOT_TOKEN>/getWebhookInfo"', function() {
+Route::post('/webhook', function() {
+    $bot = new Nutgram($_ENV['TELEGRAM_TOKEN']);
+
+
+    $bot->sendMessage(
+        text: 'Welcome!',
+        chat_id: 2091649713,
+        reply_markup: InlineKeyboardMarkup::make()
+            ->addRow(
+                InlineKeyboardButton::make('A', callback_data: 'type:a'),
+                InlineKeyboardButton::make('B', callback_data: 'type:b')
+            ),
+    //chat_id: $_ENV['TELEGRAM_CHAT_ID']
+    );
+
+
+    $bot->onCallbackQueryData('type:a', function(Nutgram $bot){
+        $bot->answerCallbackQuery(
+            text: 'You selected A'
+        );
+    });
+
+    $bot->onCallbackQueryData('type:b', function(Nutgram $bot){
+        $bot->answerCallbackQuery(
+            text: 'You selected B'
+        );
+    });
+
+    return view('welcome');
+})->withoutMiddleware([\Illuminate\Foundation\Http\Middleware\VerifyCsrfToken::class]);
+
+Route::get('/webhook', function() {
     $bot = new Nutgram($_ENV['TELEGRAM_TOKEN']);
 
 
