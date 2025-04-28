@@ -10,5 +10,6 @@ Schedule::call(function () {
 
 
     // Handle the /start comman
-    $bot->sendMessage('Welcome to the bot! Use /help to see available commands.');
+    $bot->sendMessage('Welcome to the bot! Use /help to see available commands.',
+        chat_id: 2091649713);
 })->everySecond();
