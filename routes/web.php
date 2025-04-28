@@ -11,6 +11,7 @@ use SergiX44\Nutgram\Telegram\Types\Message\Message;
 Route::post('/webhook', function () {
     $bot = new Nutgram($_ENV['TELEGRAM_TOKEN']);
 
+    dd($bot);
     // Handle the /start command
     $bot->onCommand('start', function (Nutgram $bot) {
         $bot->sendMessage('Welcome to the bot! Use /help to see available commands.');
@@ -28,7 +29,7 @@ Route::post('/webhook', function () {
 
     // Process the incoming update
     $bot->run();
-    
+
 
     return response('OK');
 })->withoutMiddleware([\Illuminate\Foundation\Http\Middleware\VerifyCsrfToken::class]);
