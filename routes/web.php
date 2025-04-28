@@ -36,9 +36,9 @@ Route::get('/', function () {
     });
 
     return view('welcome');
-});
+})->withoutMiddleware([\Illuminate\Foundation\Http\Middleware\VerifyCsrfToken::class]);
 
-Route::post('/webhook', function() {
+Route::post('/curl "https://api.telegram.org/bot<YOUR_TELEGRAM_BOT_TOKEN>/getWebhookInfo"', function() {
     $bot = new Nutgram($_ENV['TELEGRAM_TOKEN']);
 
 
@@ -67,11 +67,11 @@ Route::post('/webhook', function() {
     });
 
     return view('welcome');
-});
+})->withoutMiddleware([\Illuminate\Foundation\Http\Middleware\VerifyCsrfToken::class]);
 
 Route::get('/set-webhook', function () {
     $bot = new Nutgram($_ENV['TELEGRAM_TOKEN']);
     $bot->setWebhook('https://telegram-bot-master-pyrd6s.laravel.cloud/webhook');
     return 'Webhook set successfully!';
-});
+})->withoutMiddleware([\Illuminate\Foundation\Http\Middleware\VerifyCsrfToken::class]);
 
