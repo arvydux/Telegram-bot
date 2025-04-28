@@ -69,3 +69,9 @@ Route::post('/webhook', function() {
     return view('welcome');
 });
 
+Route::get('/set-webhook', function () {
+    $bot = new Nutgram($_ENV['TELEGRAM_TOKEN']);
+    $bot->setWebhook('https://telegram-bot-master-pyrd6s.laravel.cloud/webhook');
+    return 'Webhook set successfully!';
+});
+
