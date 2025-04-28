@@ -14,6 +14,8 @@ Route::post('/webhook', function() {
         $bot->sendMessage("You will get {$amount} portions of {$dish}!");
     });
 
+    $bot->run();
+    
     return view('welcome');
 })->withoutMiddleware([\Illuminate\Foundation\Http\Middleware\VerifyCsrfToken::class]);
 
