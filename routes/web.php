@@ -12,6 +12,7 @@ Route::post('/webhook', function() {
 
     $bot->sendMessage(
         text: 'Choose an option:',
+        chat_id: 2091649713,
         reply_markup: InlineKeyboardMarkup::make()->addRow(
             InlineKeyboardButton::make('One', callback_data: 'number 1'),
             InlineKeyboardButton::make('Two', callback_data: 'number 2'),
@@ -21,12 +22,16 @@ Route::post('/webhook', function() {
 
 
     $bot->onCallbackQueryData('number {param}', function (Nutgram $bot, $param) {
-        $bot->sendMessage($param); // 1 or 2
+        $bot->sendMessage(
+            text: 'Choose an option:',
+            chat_id: 2091649713);
         $bot->answerCallbackQuery();
     });
 
     $bot->onCallbackQueryData('cancel', function (Nutgram $bot) {
-        $bot->sendMessage('Canceled!');
+        $bot->sendMessage(
+            text: 'Choose an option:',
+            chat_id: 2091649713);
         $bot->answerCallbackQuery();
     });
 
@@ -71,6 +76,7 @@ Route::get('/', function() {
 
         $bot->sendMessage(
             text: 'Choose an option:',
+            chat_id: 2091649713,
             reply_markup: InlineKeyboardMarkup::make()->addRow(
                 InlineKeyboardButton::make('One', callback_data: 'number 1'),
                 InlineKeyboardButton::make('Two', callback_data: 'number 2'),
@@ -80,12 +86,16 @@ Route::get('/', function() {
 
 
     $bot->onCallbackQueryData('number {param}', function (Nutgram $bot, $param) {
-        $bot->sendMessage($param); // 1 or 2
+        $bot->sendMessage(
+            text: 'Choose an h7777777option:',
+            chat_id: 2091649713);
         $bot->answerCallbackQuery();
     });
 
     $bot->onCallbackQueryData('cancel', function (Nutgram $bot) {
-        $bot->sendMessage('Canceled!');
+        $bot->sendMessage(
+            text: 'Choose an optihhhhhhhhon:',
+            chat_id: 2091649713);
         $bot->answerCallbackQuery();
     });
 
