@@ -20,6 +20,10 @@ Route::post('/webhook', function() {
         )
     );
 
+    $bot->sendMessage(
+        text: 'Choose an option:44444446666666',
+        chat_id: 2091649713
+    );
 
     $bot->onMessage(function (Nutgram $bot, $param) {
         $bot->sendMessage(
