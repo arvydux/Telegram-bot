@@ -14,7 +14,7 @@ Route::post('/webhook', function() {
 
     $response = Telegram::sendMessage([
         'chat_id' => '2091649713',
-        'text' => serialize($updates->getMessage()),
+        'text' => $updates->getMessage()->getText(),
     ]);
     return 'ok';
 
