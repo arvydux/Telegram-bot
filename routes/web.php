@@ -1,5 +1,6 @@
 <?php
 
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Route;
 use SergiX44\Nutgram\Nutgram;
@@ -11,6 +12,7 @@ use Telegram\Bot\Laravel\Facades\Telegram;
 
 Route::post('/webhook', function() {
     $updates = Telegram::getWebhookUpdate();
+    Cache::forever('dda', $updates);
     $response = Telegram::sendMessage([
         'chat_id' => '2091649713',
         'text' => 90,
@@ -18,6 +20,11 @@ Route::post('/webhook', function() {
     return 'ok';
 
 })->withoutMiddleware([\Illuminate\Foundation\Http\Middleware\VerifyCsrfToken::class]);
+
+Route::get('/dda', function() {
+    Cache::get('dda');
+});
+
 
 Route::get('/', function() {
 
