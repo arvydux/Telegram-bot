@@ -4,12 +4,11 @@ use Illuminate\Foundation\Inspiring;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Schedule;
 use SergiX44\Nutgram\Nutgram;
+use Telegram\Bot\Laravel\Facades\Telegram;
 
 Schedule::call(function () {
-    $bot = new Nutgram($_ENV['TELEGRAM_TOKEN']);
-
-
-    // Handle the /start comman
-    $bot->sendMessage('Welcome to the bot! Use /help to see available commands.',
-        chat_id: 2091649713);
-})->everySecond();
+    Telegram::sendMessage([
+        'chat_id' => '2091649713',
+        'text' => 'Hello Worldjuuuu4444444okmokmokmojkm'
+    ]);
+})->everyFiveSeconds();
