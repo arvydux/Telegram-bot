@@ -16,8 +16,7 @@ Route::post('/webhook', function(Request $request) {
 
     $response = Telegram::sendMessage([
         'chat_id' => '2091649713',
-        'text' => $request->all() . '-' . $updates->all()
-    ]);
+        'text' => json_encode($request->all()) . '-' . json_encode($updates->all())    ]);
     return 'ok';
 
 })->withoutMiddleware([\Illuminate\Foundation\Http\Middleware\VerifyCsrfToken::class]);
