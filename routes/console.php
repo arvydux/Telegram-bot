@@ -50,4 +50,4 @@ Schedule::call(function () {
     ]);
 
 
-})->everyFiveMinutes();
+})->everyMinute();
