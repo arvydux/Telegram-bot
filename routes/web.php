@@ -1,5 +1,6 @@
 <?php
 
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Route;
 use SergiX44\Nutgram\Nutgram;
@@ -8,9 +9,12 @@ use SergiX44\Nutgram\Telegram\Types\Keyboard\InlineKeyboardMarkup;
 use SergiX44\Nutgram\Telegram\Types\Message\Message;
 use Telegram\Bot\Keyboard\Keyboard;
 use Telegram\Bot\Laravel\Facades\Telegram;
+use Telegram\Bot\Objects\Update;
 
-Route::post('/webhook', function() {
+Route::post('/webhook', function(Request $request, Update $update) {
     $updates = Telegram::getWebhookUpdate();
+
+    dd($request, $update)->json();
 
     $response = Telegram::sendMessage([
         'chat_id' => '2091649713',
@@ -21,29 +25,6 @@ Route::post('/webhook', function() {
 })->withoutMiddleware([\Illuminate\Foundation\Http\Middleware\VerifyCsrfToken::class]);
 
 Route::get('/', function() {
-
-
-
-
-/*    $response = Http::withHeaders([
-        'Content-Type' => 'application/json',
-    ])->post('https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?
-    key=AIzaSyBtbX4g8tyHKL2YbYce2IUo6_oF4EDK24A', [
-        'contents' => [
-            [
-                'parts' => [
-                    ['text' => 'Explain how AI works']
-                ]
-            ]
-        ]
-    ]);
-
-    if ($response->successful()) {
-        return $response->json();
-    } else {
-        return $response->body();
-    }*/
-
    // $response = Telegram::bot('Arvi_bot')->getMe();
 
     $response = Telegram::sendMessage([
@@ -51,27 +32,38 @@ Route::get('/', function() {
         'text' => 'Hello Worldjkjjkmokmokmokmokmojkm'
     ]);
 
+    $emotions = [
+        "Happy" => "😊",
+        "Sad" => "😢",
+        "Angry" => "😠",
+        "Surprised" => "😲",
+        "Excited" => "🤩",
+        "Confused" => "😕",
+        "Bored" => "😐",
+        "Anxious" => "😰",
+        "Grateful" => "🙏",
+        "In Love" => "😍",
+        "Embarrassed" => "😳",
+        "Proud" => "😌",
+        "Hopeful" => "🌈",
+        "Nervous" => "😬",
+        "Curious" => "🤔",
+        "Relaxed" => "🧘",
+        "Silly" => "😜",
+        "Tired" => "😴",
+        "Disappointed" => "😞",
+        "Lonely" => "😔"
+    ];
+
+    $testArray = [];
+    foreach ($emotions as $key => $value) {
+        $testArray[] = Keyboard::button("$key => $value");
+
+    }
     $reply_markup = Keyboard::make()
         ->setResizeKeyboard(true)
         ->setOneTimeKeyboard(true)
-        ->row([
-            Keyboard::button('1'),
-            Keyboard::button('2'),
-            Keyboard::button('3'),
-        ])
-        ->row([
-            Keyboard::button('4'),
-            Keyboard::button('5'),
-            Keyboard::button('6'),
-        ])
-        ->row([
-            Keyboard::button('7'),
-            Keyboard::button('8'),
-            Keyboard::button('9'),
-        ])
-        ->row([
-            Keyboard::button('0'),
-        ]);
+        ->row($testArray);
 
     $response = Telegram::sendMessage([
         'chat_id' => '2091649713',
@@ -84,6 +76,51 @@ Route::get('/', function() {
 
     return view('welcome');
 })->withoutMiddleware([\Illuminate\Foundation\Http\Middleware\VerifyCsrfToken::class]);
+
+
+Route::get('/a', function() {
+
+/*   $response = Http::withHeaders([
+            'Content-Type' => 'application/json',
+        ])->post('https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?
+        key=AIzaSyD-gUrvRnqCqHX3s9ymZoUg__YQI4x7E9Y', [
+            'contents' => [
+                [
+                    'parts' => [
+                        ['text' => 'Explain how AI works']
+                    ]
+                ]
+            ]
+        ]);*/
+
+    $response = Http::withHeaders([
+        'Content-Type' => 'application/json',
+        'Authorization' => 'Bearer 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',
+    ])->post('https://api.openai.com/v1/chat/completions', [
+        'model' => 'gpt-4o-mini',
+        'store' => true,
+        'messages' => [
+            ['role' => 'user', 'content' => 'give php array with 20 elements of emotions with according telegram emojis'],
+        ],
+    ]);
+
+    $chatResponse = $response->json()['choices'][0]['message']['content'] ?? 'Sorry, I could not understand that.';
+
+
+    dd($chatResponse, $response->json());
+    return $response->json();
+
+    dd($response->json()['choices'],  $response->json()['choices'][0]['message']['content']);
+
+        if ($response->successful()) {
+            return $response->json();
+        } else {
+            return $response->body();
+        }
+
+
+})->withoutMiddleware([\Illuminate\Foundation\Http\Middleware\VerifyCsrfToken::class]);
+
 
 
 Route::get('/set-webhook', function () {
