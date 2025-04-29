@@ -33,16 +33,12 @@ Route::get('/data', function() {
 
 Route::get('/', function() {
    // $response = Telegram::bot('Arvi_bot')->getMe();
-    $button1 = InlineKeyboardButton::make('Visit Website')->url('https://example.com');
-    $button2 = InlineKeyboardButton::make('Click Me')->callbackData('button_clicked');
-    $button3 = InlineKeyboardButton::make('Search')->switchInlineQuery('search_query');
-    $button4 = InlineKeyboardButton::make('Pay Now')->pay();
+    $button1 = InlineKeyboardButton::make(text:'Visit Website', callback_data: 'aaaaaaaa');
 
     // Organize buttons into rows
     $keyboard = InlineKeyboardMarkup::make()
-        ->addRow($button1, $button2) // Row 1
-        ->addRow($button3)          // Row 2
-        ->addRow($button4);         // Row 3
+
+        ->addRow($button1);         // Row 3
 
     // Send a message with the custom keyboard
     Telegram::sendMessage([
@@ -53,7 +49,7 @@ Route::get('/', function() {
 
 
 
-    
+
     $response = Telegram::sendMessage([
         'chat_id' => '2091649713',
         'text' => 'Hello Worldjkjjkmokmokmokmokmojkm'
