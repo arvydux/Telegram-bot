@@ -11,7 +11,7 @@ use Telegram\Bot\Keyboard\Keyboard;
 use Telegram\Bot\Laravel\Facades\Telegram;
 use Telegram\Bot\Objects\Update;
 
-Route::post('/webhook', function(Request $request, Update $update) {
+Route::post('/webhook', function() {
     $updates = Telegram::getWebhookUpdate();
 
     $response = Telegram::sendMessage([
