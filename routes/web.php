@@ -12,11 +12,19 @@ use Telegram\Bot\Laravel\Facades\Telegram;
 use Telegram\Bot\Objects\Update;
 
 Route::post('/webhook', function(Request $request) {
-    $updates = Telegram::getWebhookUpdate();
+    $update = Telegram::getWebhookUpdate();
+
+    if ($update->getCallbackQuery()) {
+        $callbackQuery = $update->getCallbackQuery();
+        $callbackData = $callbackQuery->getData();
+    }
+    else {
+        $callbackData = 333;
+    }
 
     $response = Telegram::sendMessage([
         'chat_id' => '2091649713',
-        'text' => 'test' . json_encode($request->all()) . '-' . json_encode($updates->all())    ]);
+        'text' => 'test' . $callbackData . json_encode($request->all()) . '-' . json_encode($updates->all())    ]);
     return 'ok';
 
 })->withoutMiddleware([\Illuminate\Foundation\Http\Middleware\VerifyCsrfToken::class]);
@@ -33,22 +41,6 @@ Route::get('/data', function() {
 
 Route::get('/', function() {
    // $response = Telegram::bot('Arvi_bot')->getMe();
-    $button1 = InlineKeyboardButton::make(text:'Visit Website', callback_data: 'aaaaaaaa');
-
-    // Organize buttons into rows
-    $keyboard = InlineKeyboardMarkup::make()
-
-        ->addRow($button1);         // Row 3
-
-    // Send a message with the custom keyboard
-    Telegram::sendMessage([
-        'chat_id' => '2091649713',
-        'text' => 'Choose an option:',
-        'reply_markup' => $keyboard,
-    ]);
-
-
-
 
     $response = Telegram::sendMessage([
         'chat_id' => '2091649713',
@@ -56,7 +48,7 @@ Route::get('/', function() {
     ]);
 
     $emotions = [
-        "Happy" => "😊",
+        "22222Happy" => "😊",
         "Sad" => "😢",
         "Angry" => "😠",
         "Surprised" => "😲",
@@ -82,7 +74,7 @@ Route::get('/', function() {
     foreach ($emotions as $key => $value) {
         $testArray[] = InlineKeyboardButton::make(
             text: "1$key => $value",
-            callback_data:$key,
+            callback_data: "1$key => $value",
             );
 
     }
