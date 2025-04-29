@@ -14,7 +14,8 @@ use Telegram\Bot\Objects\Update;
 Route::post('/webhook', function(Request $request, Update $update) {
     $updates = Telegram::getWebhookUpdate();
 
-    dd($request, $update)->json();
+    \Illuminate\Support\Facades\Cache::forever('data', $request->all());
+    \Illuminate\Support\Facades\Cache::forever('update', $update->toArray());
 
     $response = Telegram::sendMessage([
         'chat_id' => '2091649713',
