@@ -14,17 +14,10 @@ use Telegram\Bot\Objects\Update;
 Route::post('/webhook', function(Request $request) {
     $update = Telegram::getWebhookUpdate();
 
-    if ($update->getCallbackQuery()) {
-        $callbackQuery = $update->getCallbackQuery();
-        $callbackData = $callbackQuery->getData();
-    }
-    else {
-        $callbackData = 333;
-    }
 
     $response = Telegram::sendMessage([
         'chat_id' => '2091649713',
-        'text' => 'test' . $callbackData . json_encode($request->all()) . '-' . json_encode($updates->all())    ]);
+        'text' => 'test'  . json_encode($request->all()) . '-' . json_encode($updates->all())    ]);
     return 'ok';
 
 })->withoutMiddleware([\Illuminate\Foundation\Http\Middleware\VerifyCsrfToken::class]);
