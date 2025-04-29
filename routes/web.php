@@ -11,12 +11,12 @@ use Telegram\Bot\Keyboard\Keyboard;
 use Telegram\Bot\Laravel\Facades\Telegram;
 use Telegram\Bot\Objects\Update;
 
-Route::post('/webhook', function() {
+Route::post('/webhook', function(Request $request) {
     $updates = Telegram::getWebhookUpdate();
 
     $response = Telegram::sendMessage([
         'chat_id' => '2091649713',
-        'text' => 456789
+        'text' => $request->all() . '-' . $updates->all()
     ]);
     return 'ok';
 
