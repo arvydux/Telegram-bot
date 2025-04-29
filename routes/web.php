@@ -25,6 +25,16 @@ Route::post('/webhook', function(Request $request, Update $update) {
 
 })->withoutMiddleware([\Illuminate\Foundation\Http\Middleware\VerifyCsrfToken::class]);
 
+Route::get('/data', function() {
+
+
+    $data = \Illuminate\Support\Facades\Cache::get('data');
+    $updates = \Illuminate\Support\Facades\Cache::get('update');
+
+    dd($data, $updates);
+})->withoutMiddleware([\Illuminate\Foundation\Http\Middleware\VerifyCsrfToken::class]);
+
+
 Route::get('/', function() {
    // $response = Telegram::bot('Arvi_bot')->getMe();
 
