@@ -14,13 +14,13 @@ use Telegram\Bot\Objects\Update;
 Route::post('/webhook', function(Request $request, Update $update) {
     $updates = Telegram::getWebhookUpdate();
 
-    dd($request->all(), $updates->all());
+  //  dd($request->all(), $updates->all());
     \Illuminate\Support\Facades\Cache::forever('data', $request->all());
     \Illuminate\Support\Facades\Cache::forever('update', $update->toArray());
 
     $response = Telegram::sendMessage([
         'chat_id' => '2091649713',
-        'text' => $updates->getMessage()->getText(),
+        'text' => $request->all() . '-' . $updates->all()
     ]);
     return 'ok';
 
