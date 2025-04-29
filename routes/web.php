@@ -8,40 +8,31 @@ use SergiX44\Nutgram\Telegram\Types\Keyboard\InlineKeyboardButton;
 use SergiX44\Nutgram\Telegram\Types\Keyboard\InlineKeyboardMarkup;
 use SergiX44\Nutgram\Telegram\Types\Message\Message;
 use Telegram\Bot\Keyboard\Keyboard;
+
 use Telegram\Bot\Laravel\Facades\Telegram;
 use Telegram\Bot\Objects\Update;
 
 Route::post('/webhook', function(Request $request) {
-    $update = Telegram::getWebhookUpdate();
-
+    $updates = Telegram::getWebhookUpdate();
 
     $response = Telegram::sendMessage([
         'chat_id' => '2091649713',
-        'text' => 'test'  . json_encode($request->all()) . '-' . json_encode($update->all())    ]);
+        'text' => 'test' . json_encode($request->all()) . '-' . json_encode($updates->all())    ]);
     return 'ok';
 
 })->withoutMiddleware([\Illuminate\Foundation\Http\Middleware\VerifyCsrfToken::class]);
 
-Route::get('/data', function() {
+Route::get('/', function(Request $request) {
 
-
-    $data = \Illuminate\Support\Facades\Cache::get('data');
-    $updates = \Illuminate\Support\Facades\Cache::get('update');
-
-    dd($data, $updates);
-})->withoutMiddleware([\Illuminate\Foundation\Http\Middleware\VerifyCsrfToken::class]);
-
-
-Route::get('/', function() {
-   // $response = Telegram::bot('Arvi_bot')->getMe();
+    $updates = Telegram::getWebhookUpdate();
 
     $response = Telegram::sendMessage([
         'chat_id' => '2091649713',
-        'text' => 'Hello Worldjkjjkmokmokmokmokmojkm'
+        'text' => json_encode($updates)
     ]);
 
     $emotions = [
-        "22222Happy" => "😊",
+        "Happy" => "😊",
         "Sad" => "😢",
         "Angry" => "😠",
         "Surprised" => "😲",
@@ -63,23 +54,25 @@ Route::get('/', function() {
         "Lonely" => "😔"
     ];
 
-    $testArray = [];
-    foreach ($emotions as $key => $value) {
-        $testArray[] = InlineKeyboardButton::make(
-            text: "1$key => $value",
-            callback_data: "1$key => $value",
-            );
+    $emotionsArray = [];
+    foreach ($emotions as $text => $emoji) {
+        $emotionsArray[] = [
+            'text' => $text . ' ' . $emoji,
+            'callback_data' => $text
+        ];
 
     }
-    $reply_markup = Keyboard::make()
-        ->setResizeKeyboard(true)
-        ->setOneTimeKeyboard(true)
-        ->row($testArray);
 
-    $response = Telegram::sendMessage([
+    $columns = 2;
+    $emotionsArray = array_chunk($emotionsArray, $columns);
+
+    Http::post('https://api.telegram.org/bot' . env('TELEGRAM_TOKEN') . '/sendMessage', [
         'chat_id' => '2091649713',
         'text' => 'Hello World',
-        'reply_markup' => $reply_markup
+        'reply_markup' => [
+            'inline_keyboard' =>
+                $emotionsArray
+        ]
     ]);
 
     $messageId = $response->getMessageId();
@@ -91,18 +84,7 @@ Route::get('/', function() {
 
 Route::get('/a', function() {
 
-/*   $response = Http::withHeaders([
-            'Content-Type' => 'application/json',
-        ])->post('https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?
-        key=AIzaSyD-gUrvRnqCqHX3s9ymZoUg__YQI4x7E9Y', [
-            'contents' => [
-                [
-                    'parts' => [
-                        ['text' => 'Explain how AI works']
-                    ]
-                ]
-            ]
-        ]);*/
+    $emotion = 'Love';
 
     $response = Http::withHeaders([
         'Content-Type' => 'application/json',
@@ -111,24 +93,13 @@ Route::get('/a', function() {
         'model' => 'gpt-4o-mini',
         'store' => true,
         'messages' => [
-            ['role' => 'user', 'content' => 'give php array with 20 elements of emotions with according telegram emojis'],
+            ['role' => 'user', 'content' => 'show a random quote about ' . $emotion . ' emotion that can help the me feel better. Try show which you haven \'t show before.'],
         ],
     ]);
 
     $chatResponse = $response->json()['choices'][0]['message']['content'] ?? 'Sorry, I could not understand that.';
 
-
-    dd($chatResponse, $response->json());
-    return $response->json();
-
-    dd($response->json()['choices'],  $response->json()['choices'][0]['message']['content']);
-
-        if ($response->successful()) {
-            return $response->json();
-        } else {
-            return $response->body();
-        }
-
+    dd($chatResponse);
 
 })->withoutMiddleware([\Illuminate\Foundation\Http\Middleware\VerifyCsrfToken::class]);
 
