@@ -15,9 +15,21 @@ use Telegram\Bot\Objects\Update;
 Route::post('/webhook', function(Request $request) {
     $updates = Telegram::getWebhookUpdate();
 
+    $update = $updates;
+
+    // Check if the update contains a message
+    if ($update->getMessage()) {
+        $chatId = $update->getMessage()->getChat()->getId();
+    } elseif ($update->getCallbackQuery()) {
+        // If it's a callback query
+        $chatId = $update->getCallbackQuery()->getMessage()->getChat()->getId();
+    } else {
+        $chatId = null; // Handle cases where chat_id is not present
+    }
+
     $response = Telegram::sendMessage([
         'chat_id' => '2091649713',
-        'text' => 'test' . json_encode($request['id']) . '-' . json_encode($request->all()) . '-' . json_encode($updates->all())    ]);
+        'text' => $chatId . 'test' . json_encode($request['id']) . '-' . json_encode($request->all()) . '-' . json_encode($updates->all())    ]);
     return 'ok';
 
 })->withoutMiddleware([\Illuminate\Foundation\Http\Middleware\VerifyCsrfToken::class]);
