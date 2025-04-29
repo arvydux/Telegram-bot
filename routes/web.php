@@ -64,10 +64,10 @@ Route::get('/', function() {
 
     $testArray = [];
     foreach ($emotions as $key => $value) {
-        $testArray[] = Keyboard::button([
-            'text' => "1$key => $value",
-            'callback_data' => $key,
-            ]);
+        $testArray[] = InlineKeyboardButton::make(
+            text: "1$key => $value",
+            callback_data: $key,
+            );
 
     }
     $reply_markup = Keyboard::make()
