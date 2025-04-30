@@ -96,7 +96,7 @@ class TelegramBotController extends Controller
         return $response->json()['choices'][0]['message']['content'] ?? 'Sorry, I could not understand that.';
     }
 
-    protected function getChatIdFromUpdate($updates): ?Chat
+    protected function getChatIdFromUpdate($updates): ?string
     {
         // Check if the update contains a message
         if (isset($updates['message'])) {
