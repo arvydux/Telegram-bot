@@ -14,7 +14,7 @@ class TelegramBotController extends Controller
         $chatId = $this->getChatIdFromUpdate($updates);
         $this->sendMessage($chatId, 'AAA:' . $chatId);
         $this->sendMessage($chatId, 'exist?:' . !Chat::where('chat_id', $chatId)->exists());
-        $userName = $this->getUserNameFromChatId($chatId) ?? 'User';
+        $userName = $this->getFirstNameFromChatId($chatId) ?? 'User';
         if (!Chat::where('chat_id', $chatId)->exists()) {
             $this->sendWelcomeMessage($chatId, $userName);
         }
@@ -130,7 +130,7 @@ class TelegramBotController extends Controller
         return $chatId;
     }
 
-    public function getUserNameFromChatId($chatId): ?string
+    public function getFirstNameFromChatId($chatId): ?string
     {
         $response = Http::post('https://api.telegram.org/bot' . env('TELEGRAM_TOKEN') . '/getChat', [
             'chat_id' => $chatId,
@@ -138,7 +138,7 @@ class TelegramBotController extends Controller
 
         if ($response->successful()) {
             $data = $response->json();
-            return $data['result']['username'] ?? null; // Return the username if available
+            return $data['result']['first_name'] ?? null; // Return the username if available
         }
     }
 
