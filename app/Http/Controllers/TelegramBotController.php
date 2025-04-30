@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Http;
 
 class TelegramBotController extends Controller
 {
-    public function handleWebhook(Request $request)
+    public function handleWebhook(Request $request): void
     {
         $updates = $request->all();
         $chatId = $this->getChatIdFromUpdate($updates);
@@ -24,28 +24,6 @@ class TelegramBotController extends Controller
             $this->sendMessage($chatId, 'Let\'s try again!');
         }
         $this->sendMessageAboutEmotions($chatId);
-
-        return 1;
-
-        // Check if the update contains a message
-        if (isset($updates['message'])) {
-            $chatId = $updates['message']['chat']['id'];
-        } elseif (isset($updates['callback_query'])) {
-            // If it's a callback query
-            $chatId = $updates['callback_query']['message']['chat']['id'];
-        } else {
-            $chatId = null; // Handle cases where chat_id is not present
-        }
-
-        $this->sendMessage($chatId, $chatId);
-
-        return 'ok';
-    }
-
-    public function sendWelcomeText(string $chatId, string $userName)
-    {
-        $text = "Welcome to the bot, $userName!";
-        $this->sendMessage($chatId, $text, $keyboard);
     }
 
     public function sendMessageAboutEmotions(string $chatId, ?string $additionalText = null): void
