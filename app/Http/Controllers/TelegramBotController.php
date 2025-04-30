@@ -16,6 +16,7 @@ class TelegramBotController extends Controller
         if ($callbackData) {
             $answer = $this->sendQuestionToOpenAi(json_encode($callbackData));
             $this->sendMessage($chatId, $answer);
+            $this->sendMessage($chatId, 'Let\'s try again!');
         }
         $this->sendMessageAboutEmotions($chatId);
 
