@@ -74,6 +74,7 @@ Route::get('/', function(Request $request) {
 
 Route::get('/a', function() {
 
+    dd(Chat::where('chat_id', 112233)->exists() === true);
     echo 'exist?:' . (Chat::where('chat_id', 34)->exists() === true);
 dd( 5);
     dd( Chat::where('chat_id', 34)->exists());

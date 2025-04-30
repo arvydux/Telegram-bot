@@ -17,6 +17,7 @@ class TelegramBotController extends Controller
         $this->sendMessage($chatId, 'exist?:' . $test);
         $userName = $this->getFirstNameFromChatId($chatId) ?? 'User';
         if (Chat::where('chat_id', $chatId)->exists() === false) {
+            $this->subscribeChat($chatId);
             $this->sendWelcomeMessage($chatId, $userName);
         }
         $callbackData = $this->getCallbackDataFromUpdate($updates);
