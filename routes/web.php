@@ -3,45 +3,23 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Route;
-use SergiX44\Nutgram\Nutgram;
-use SergiX44\Nutgram\Telegram\Types\Keyboard\InlineKeyboardButton;
-use SergiX44\Nutgram\Telegram\Types\Keyboard\InlineKeyboardMarkup;
-use SergiX44\Nutgram\Telegram\Types\Message\Message;
-use Telegram\Bot\Keyboard\Keyboard;
 
-use Telegram\Bot\Laravel\Facades\Telegram;
-use Telegram\Bot\Objects\Update;
-
-Route::post('/webhook', function(Request $request) {
-    $updates = Telegram::getWebhookUpdate();
-
-    $update = $updates;
-
-    // Check if the update contains a message
-    if ($update->getMessage()) {
-        $chatId = $update->getMessage()->getChat()->getId();
-    } elseif ($update->getCallbackQuery()) {
-        // If it's a callback query
-        $chatId = $update->getCallbackQuery()->getMessage()->getChat()->getId();
-    } else {
-        $chatId = null; // Handle cases where chat_id is not present
-    }
-
-    $response = Telegram::sendMessage([
-        'chat_id' => '2091649713',
-        'text' => $chatId . 'test' . json_encode($request['id']) . '-' . json_encode($request->all()) . '-' . json_encode($updates->all())    ]);
-    return 'ok';
-
-})->withoutMiddleware([\Illuminate\Foundation\Http\Middleware\VerifyCsrfToken::class]);
+Route::post('/webhook', [\App\Http\Controllers\TelegramBotController::class, 'handleWebhook'])->withoutMiddleware([\Illuminate\Foundation\Http\Middleware\VerifyCsrfToken::class]);
 
 Route::get('/', function(Request $request) {
 
-    $updates = Telegram::getWebhookUpdate();
+    $keyboard = (new App\Http\Controllers\TelegramBotController)->makeEmotionsKeyboard();
 
-    $response = Telegram::sendMessage([
+    (new App\Http\Controllers\TelegramBotController)->sendMessageAboutEmotions('2091649713', 'test');
+
+    dd(1);
+    Http::post('https://api.telegram.org/bot' . env('TELEGRAM_TOKEN') . '/sendMessage', [
         'chat_id' => '2091649713',
-        'text' => json_encode($updates)
+        'text' => 'AAAHi, how are you feeling today? (I ask this question every hour)?',
+        'reply_markup' => null,
     ]);
+
+
 
     $emotions = [
         "Happy" => "😊",
@@ -87,7 +65,6 @@ Route::get('/', function(Request $request) {
         ]
     ]);
 
-    $messageId = $response->getMessageId();
 
 
     return view('welcome');
@@ -98,9 +75,10 @@ Route::get('/a', function() {
 
     $emotion = 'Love';
 
+    $openApiKey = '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';
     $response = Http::withHeaders([
         'Content-Type' => 'application/json',
-        'Authorization' => 'Bearer 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',
+        'Authorization' => 'Bearer ' . env('OPENAI_API_KEY') ?: $openApiKey,
     ])->post('https://api.openai.com/v1/chat/completions', [
         'model' => 'gpt-4o-mini',
         'store' => true,
@@ -111,15 +89,6 @@ Route::get('/a', function() {
 
     $chatResponse = $response->json()['choices'][0]['message']['content'] ?? 'Sorry, I could not understand that.';
 
-    dd($chatResponse);
-
 })->withoutMiddleware([\Illuminate\Foundation\Http\Middleware\VerifyCsrfToken::class]);
 
-
-
-Route::get('/set-webhook', function () {
-    $bot = new Nutgram($_ENV['TELEGRAM_TOKEN']);
-    $bot->setWebhook('https://telegram-bot-master-pyrd6s.laravel.cloud/webhook');
-    return 'ooWebhook set successfully!';
-})->withoutMiddleware([\Illuminate\Foundation\Http\Middleware\VerifyCsrfToken::class]);
 

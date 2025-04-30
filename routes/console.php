@@ -43,10 +43,7 @@ Schedule::call(function () {
     Http::post('https://api.telegram.org/bot' . env('TELEGRAM_TOKEN') . '/sendMessage', [
         'chat_id' => '2091649713',
         'text' => 'Hi, how are you feeling today? (I ask this question every hour)?',
-        'reply_markup' => [
-            'inline_keyboard' =>
-                $emotionsArray
-        ]
+        (new App\Http\Controllers\TelegramBotController)->makeEmotionButtons(),
     ]);
 
 
