@@ -73,12 +73,16 @@ Route::get('/', function(Request $request) {
 
 Route::get('/a', function() {
 
+    $answer = (new App\Http\Controllers\TelegramBotController)->sendQuestionToOpenAi("confused");
+
+    dd($answer);
+
     $emotion = 'Love';
 
     $openApiKey = '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';
     $response = Http::withHeaders([
         'Content-Type' => 'application/json',
-        'Authorization' => 'Bearer ' . env('OPENAI_API_KEY') ?: $openApiKey,
+        'Authorization' => 'Bearer ' . $openApiKey,
     ])->post('https://api.openai.com/v1/chat/completions', [
         'model' => 'gpt-4o-mini',
         'store' => true,
