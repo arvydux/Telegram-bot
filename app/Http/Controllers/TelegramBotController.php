@@ -12,7 +12,7 @@ class TelegramBotController extends Controller
     {
         $updates = $request->all();
         $chatId = $this->getChatIdFromUpdate($updates);
-        if (!Chat::where('email', $chatId)->first()->chat_id) {
+        if (!Chat::where('email', $chatId)->first()?->chat_id) {
             $this->subscribeChat($chatId);
             $text = 'You just subscribed to this bot. Now you will receive messages every morning.';
             $this->sendMessage($chatId, $text);
