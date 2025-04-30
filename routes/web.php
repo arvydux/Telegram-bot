@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Chat;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Route;
@@ -73,25 +74,14 @@ Route::get('/', function(Request $request) {
 
 Route::get('/a', function() {
 
-    $answer = (new App\Http\Controllers\TelegramBotController)->sendQuestionToOpenAi("confused");
-
-    dd($answer);
-
-    $emotion = 'Love';
-
-    $openApiKey = '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';
-    $response = Http::withHeaders([
-        'Content-Type' => 'application/json',
-        'Authorization' => 'Bearer ' . $openApiKey,
-    ])->post('https://api.openai.com/v1/chat/completions', [
-        'model' => 'gpt-4o-mini',
-        'store' => true,
-        'messages' => [
-            ['role' => 'user', 'content' => 'show a random quote about ' . $emotion . ' emotion that can help the me feel better. Try show which you haven \'t show before.'],
-        ],
+    echo 'exist?:' . (Chat::where('chat_id', 34)->exists() === true);
+dd( 5);
+    dd( Chat::where('chat_id', 34)->exists());
+    Chat::create([
+        'chat_id' => 112233,
     ]);
 
-    $chatResponse = $response->json()['choices'][0]['message']['content'] ?? 'Sorry, I could not understand that.';
+    Chat::where('chat_id', 112233)->exists();
 
 })->withoutMiddleware([\Illuminate\Foundation\Http\Middleware\VerifyCsrfToken::class]);
 
