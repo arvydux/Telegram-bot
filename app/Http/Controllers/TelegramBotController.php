@@ -15,7 +15,9 @@ class TelegramBotController extends Controller
 
         $callbackData = $this->getCallbackDataFromUpdate($updates);
         $this->sendMessageAboutEmotions($chatId, json_encode($callbackData));
-
+        $answer = $this->sendQuestionToOpenAi($callbackData);
+        $this->sendMessage($chatId, $answer);
+        
         return 1;
 
         // Check if the update contains a message
