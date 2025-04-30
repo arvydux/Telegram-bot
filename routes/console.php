@@ -9,6 +9,7 @@ Schedule::call(function () {
     foreach ($chats as $chat) {
         $text = '(This message you will receive every morning.)';
         (new App\Http\Controllers\TelegramBotController)->sendRecurringMessage($chat->chat_id, $text);
+        log('Message sent to chat: ' . $chat->chat_id);
     }
 
 })->everyFiveMinutes();
