@@ -84,9 +84,9 @@ class TelegramBotController extends Controller
 
     protected function subscribeChat($chatId): string
     {
-        return Chat::Create(
-            ['email' => $chatId],
-        );
+        return Chat::create([
+            'chat_id' => $chatId,
+        ]);
     }
 
     public function sendQuestionToOpenAi($emotion): string
