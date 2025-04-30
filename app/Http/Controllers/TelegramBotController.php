@@ -13,7 +13,8 @@ class TelegramBotController extends Controller
         $updates = $request->all();
         $chatId = $this->getChatIdFromUpdate($updates);
 
-        $this->sendMessageAboutEmotions($chatId, json_encode($updates));
+        $callbackData = $this->getCallbackDataFromUpdate($updates);
+        $this->sendMessageAboutEmotions($chatId, json_encode($callbackData));
 
         return 1;
 
@@ -113,6 +114,15 @@ class TelegramBotController extends Controller
         }
 
         return $chatId;
+    }
+
+    protected function getCallbackDataFromUpdate($updates): ?string
+    {
+        if (isset($updates['callback_query']['data'])) {
+            return $updates['callback_query']['data'];
+        }
+
+        return null; // Return null if no callback_data is present
     }
 
     public function makeEmotionsKeyboard(): array
