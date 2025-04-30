@@ -50,7 +50,8 @@ class TelegramBotController extends Controller
 
     public function sendMessageAboutEmotions(string $chatId, ?string $additionalText = null): void
     {
-        $text = "Hi, how are you feeling today?! " . $additionalText;
+        $userName = $this->getFirstNameFromChatId($chatId) ?? 'User';
+        $text = "Hi, $userName, how are you feeling today?! " . $additionalText;
         $keyboard = $this->makeEmotionsKeyboard();
         $this->sendMessage($chatId, $text, $keyboard);
     }
