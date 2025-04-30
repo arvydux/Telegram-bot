@@ -13,4 +13,5 @@ Schedule::call(function () {
         Log::info('Message sent to chat: ' . $chat->chat_id);
     }
 
-})->everyMinute();
+})->everyMinute()
+    ->dailyAt('09:00');
