@@ -13,7 +13,7 @@ class TelegramBotController extends Controller
         $updates = $request->all();
         $chatId = $this->getChatIdFromUpdate($updates);
         $this->sendMessage($chatId, 'AAA:' . $chatId);
-        $userName = $updates['message']['from']['first_name'] ?? 'User';
+        $userName = $this->getUserNameFromChatId($chatId) ?? 'User';
         if (!Chat::where('chat_id', $chatId)->exists()) {
             $this->sendWelcomeMessage($chatId, $userName);
         }
@@ -127,6 +127,18 @@ class TelegramBotController extends Controller
         }
 
         return $chatId;
+    }
+
+    public function getUserNameFromChatId($chatId): ?string
+    {
+        $response = Http::post('https://api.telegram.org/bot' . env('TELEGRAM_TOKEN') . '/getChat', [
+            'chat_id' => $chatId,
+        ]);
+
+        if ($response->successful()) {
+            $data = $response->json();
+            return $data['result']['username'] ?? null; // Return the username if available
+        }
     }
 
     protected function getCallbackDataFromUpdate($updates): ?string
