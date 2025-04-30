@@ -11,4 +11,4 @@ Schedule::call(function () {
         (new App\Http\Controllers\TelegramBotController)->sendRecurringMessage($chat->chat_id, $text);
     }
 
-})->everyFiveSeconds();
+})->everyFiveMinutes();
