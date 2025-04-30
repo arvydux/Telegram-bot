@@ -12,10 +12,9 @@ class TelegramBotController extends Controller
     {
         $updates = $request->all();
         $chatId = $this->getChatIdFromUpdate($updates);
+        $userName = $updates['message']['from']['first_name'] ?? 'User';
         if (!Chat::where('chat_id', $chatId)->first()?->chat_id) {
-            $this->subscribeChat($chatId);
-            $text = 'You just subscribed to this bot. Now you will receive messages every morning.';
-            $this->sendMessage($chatId, $text);
+            $this->sendWelcomeMessage($chatId, $userName);
         }
         $callbackData = $this->getCallbackDataFromUpdate($updates);
         if ($callbackData) {
@@ -87,6 +86,14 @@ class TelegramBotController extends Controller
         return Chat::create([
             'chat_id' => $chatId,
         ]);
+    }
+
+    public function sendWelcomeMessage($chatId,$userName): void
+    {
+        $text = "Hello, $userName. Welcome to the Bot";
+        $this->sendMessage($chatId, $text);
+        $text = 'You just subscribed to this bot. Now you will receive messages every morning.';
+        $this->sendMessage($chatId, $text);
     }
 
     public function sendQuestionToOpenAi($emotion): string
