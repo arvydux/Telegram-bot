@@ -13,4 +13,4 @@ Schedule::call(function () {
         Log::info('Message sent to chat: ' . $chat->chat_id);
     }
 
-})->everyFiveMinutes();
+})->everyMinute();
