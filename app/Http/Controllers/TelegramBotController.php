@@ -12,6 +12,11 @@ class TelegramBotController extends Controller
     {
         $updates = $request->all();
         $chatId = $this->getChatIdFromUpdate($updates);
+        if (!Chat::where('email', $chatId)->first()->chat_id) {
+            $this->subscribeChat($chatId);
+            $text = 'You just subscribed to this bot. Now you will receive messages every morning.';
+            $this->sendMessage($chatId, $text);
+        }
         $callbackData = $this->getCallbackDataFromUpdate($updates);
         if ($callbackData) {
             $answer = $this->sendQuestionToOpenAi(json_encode($callbackData));
@@ -77,15 +82,11 @@ class TelegramBotController extends Controller
         return response()->json(['status' => 'webhook set']);
     }
 
-    protected function subscribeChat($chatId): Chat
+    protected function subscribeChat($chatId): string
     {
-        $text = 'You have been subscribed to this bot. Welcome to the bot!';
-
-        return $chat = Chat::firstOrCreate(
+        return Chat::Create(
             ['email' => $chatId],
         );
-
-        return response()->json(['status' => 'chat subscribed']);
     }
 
     public function sendQuestionToOpenAi($emotion): string
