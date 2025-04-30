@@ -70,7 +70,7 @@ class TelegramBotController extends Controller
     public function sendWelcomeMessage($chatId): void
     {
         $userName = $this->getFirstNameFromChatId($chatId) ?? 'User';
-        $text = "Hello, $userName. Welcome to the Bot";
+        $text = "Hello, $userName, welcome to the Bot!";
         $this->sendMessage($chatId, $text);
         $text = 'You just subscribed to this bot. Now you will receive messages every morning.';
         $this->sendMessage($chatId, $text);
