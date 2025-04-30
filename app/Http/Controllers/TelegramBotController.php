@@ -13,7 +13,7 @@ class TelegramBotController extends Controller
         $updates = $request->all();
         $chatId = $this->getChatIdFromUpdate($updates);
 
-        $this->sendMessageAboutEmotions($chatId, 'test');
+        $this->sendMessageAboutEmotions($chatId, json_encode($updates));
 
         return 1;
 
