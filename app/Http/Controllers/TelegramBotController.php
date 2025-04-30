@@ -13,6 +13,10 @@ class TelegramBotController extends Controller
         $updates = $request->all();
         $chatId = $this->getChatIdFromUpdate($updates);
 
+        $this->sendMessageAboutEmotions($chatId, 'test');
+
+        return 1;
+
         // Check if the update contains a message
         if (isset($updates['message'])) {
             $chatId = $updates['message']['chat']['id'];
