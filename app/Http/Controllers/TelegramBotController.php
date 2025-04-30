@@ -12,12 +12,12 @@ class TelegramBotController extends Controller
     {
         $updates = $request->all();
         $chatId = $this->getChatIdFromUpdate($updates);
-        $this->sendMessageAboutEmotions($chatId);
         $callbackData = $this->getCallbackDataFromUpdate($updates);
         if ($callbackData) {
             $answer = $this->sendQuestionToOpenAi(json_encode($callbackData));
             $this->sendMessage($chatId, $answer);
         }
+        $this->sendMessageAboutEmotions($chatId);
 
         return 1;
 
