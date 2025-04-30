@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\Chat;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Schedule;
 
 Schedule::call(function () {
@@ -9,7 +10,7 @@ Schedule::call(function () {
     foreach ($chats as $chat) {
         $text = '(This message you will receive every morning.)';
         (new App\Http\Controllers\TelegramBotController)->sendRecurringMessage($chat->chat_id, $text);
-        log('Message sent to chat: ' . $chat->chat_id);
+        Log::info('Message sent to chat: ' . $chat->chat_id);
     }
 
 })->everyFiveMinutes();
