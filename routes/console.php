@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Schedule;
 Schedule::call(function () {
     Log::info('Test 1: ');
     $chats = Chat::all();
+    Log::info('Chats: ' . $chats);
     foreach ($chats as $chat) {
         Log::info('Test 2: ');
         $text = '(This message you will receive every morning.)';
