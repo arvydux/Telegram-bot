@@ -5,11 +5,14 @@ namespace App\Http\Controllers;
 use App\Models\Chat;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 
 class TelegramBotController extends Controller
 {
     public function handleWebhook(Request $request): void
     {
+        Log::info('Database connection: ' . config('database.default'));
+        Log::info('Chats count: ' . Chat::count());
         $updates = $request->all();
         $chatId = $this->getChatIdFromUpdate($updates);
         if (!Chat::where('chat_id', $chatId)->exists()) {
