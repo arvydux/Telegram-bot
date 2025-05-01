@@ -1,56 +1,19 @@
 <?php
 
+use App\Models\Chat;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Schedule;
 
 Schedule::call(function () {
-
-    $emotions = [
-        "Happy" => "😊",
-        "Sad" => "😢",
-        "Angry" => "😠",
-        "Surprised" => "😲",
-        "Excited" => "🤩",
-        "Confused" => "😕",
-        "Bored" => "😐",
-        "Anxious" => "😰",
-        "Grateful" => "🙏",
-        "In Love" => "😍",
-        "Embarrassed" => "😳",
-        "Proud" => "😌",
-        "Hopeful" => "🌈",
-        "Nervous" => "😬",
-        "Curious" => "🤔",
-        "Relaxed" => "🧘",
-        "Silly" => "😜",
-        "Tired" => "😴",
-        "Disappointed" => "😞",
-        "Lonely" => "😔"
-    ];
-
-    $emotionsArray = [];
-    foreach ($emotions as $text => $emoji) {
-        $emotionsArray[] = [
-            'text' => $text . ' ' . $emoji,
-            'callback_data' => $text
-        ];
-
+    Log::info('Test 1: ');
+    $chats = Chat::all();
+    foreach ($chats as $chat) {
+        Log::info('Test 2: ');
+        $text = '(This message you will receive every morning.)';
+        (new App\Http\Controllers\TelegramBotController)->sendRecurringMessage($chat->chat_id, $text);
+        Log::info('Message sent to chat: ' . $chat->chat_id);
     }
-
-    $columns = 2;
-    $emotionsArray = array_chunk($emotionsArray, $columns);
-
-    Http::post('https://api.telegram.org/bot' . env('TELEGRAM_TOKEN') . '/sendMessage', [
-        'chat_id' => '2091649713',
-        'text' => 'Hi, how are you feeling today? (I ask this question every hour)?',
-        'reply_markup' => [
-            'inline_keyboard' =>
-                $emotionsArray
-        ]
-    ]);
-
-    Log::info('Message sent to chat: ' );
-
+    Log::info('Test 3: ');
 
 })->everyMinute();
