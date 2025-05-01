@@ -5,14 +5,11 @@ namespace App\Http\Controllers;
 use App\Models\Chat;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
-use Illuminate\Support\Facades\Log;
 
 class TelegramBotController extends Controller
 {
     public function handleWebhook(Request $request): void
     {
-        Log::info('Database connection: ' . config('database.default'));
-        Log::info('Chats count: ' . Chat::count());
         $updates = $request->all();
         $chatId = $this->getChatIdFromUpdate($updates);
         if (!Chat::where('chat_id', $chatId)->exists()) {
@@ -31,7 +28,7 @@ class TelegramBotController extends Controller
     public function sendMessageAboutEmotions(string $chatId, ?string $additionalText = null): void
     {
         $userName = $this->getFirstNameFromChatId($chatId) ?? 'User';
-        $text = "Hi, $userName, how are you feeling today?! " . $additionalText;
+        $text = "Hi, $userName,  please, let me know how you feel today?! " . $additionalText;
         $keyboard = $this->makeEmotionsKeyboard();
         $this->sendMessage($chatId, $text, $keyboard);
     }
@@ -103,14 +100,12 @@ class TelegramBotController extends Controller
 
     protected function getChatIdFromUpdate($updates): ?string
     {
-        // Check if the update contains a message
         if (isset($updates['message'])) {
             $chatId = $updates['message']['chat']['id'];
         } elseif (isset($updates['callback_query'])) {
-            // If it's a callback query
             $chatId = $updates['callback_query']['message']['chat']['id'];
         } else {
-            $chatId = null; // Handle cases where chat_id is not present
+            $chatId = null;
         }
 
         return $chatId;
@@ -124,7 +119,7 @@ class TelegramBotController extends Controller
 
         if ($response->successful()) {
             $data = $response->json();
-            return $data['result']['first_name'] ?? null; // Return the username if available
+            return $data['result']['first_name'] ?? null;
         }
     }
 
@@ -134,7 +129,7 @@ class TelegramBotController extends Controller
             return $updates['callback_query']['data'];
         }
 
-        return null; // Return null if no callback_data is present
+        return null;
     }
 
     public function makeEmotionsKeyboard(): array

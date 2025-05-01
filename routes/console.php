@@ -1,25 +1,14 @@
 <?php
 
 use App\Models\Chat;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Schedule;
 
 Schedule::call(function () {
-    $chats = DB::table('chats')->get();
-    Log::info('Chats: ' . $chats->count());
-    Log::info('Database connection: ' . config('database.default'));
-    Log::info('Chats count: ' . Chat::count());
-    Log::info('Test 1: ');
     $chats = Chat::all();
-    Log::info('Chats: ' . $chats);
     foreach ($chats as $chat) {
-        Log::info('Test 2: ');
-        $text = '(This message you will receive every morning.)';
+        $text = '(This message you will receive every morning. 888)';
         (new App\Http\Controllers\TelegramBotController)->sendRecurringMessage($chat->chat_id, $text);
         Log::info('Message sent to chat: ' . $chat->chat_id);
     }
-    Log::info('Test 3: ');
-
-})->everyTenSeconds();
+})->dailyAt('16:00');
