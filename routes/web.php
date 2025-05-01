@@ -3,6 +3,7 @@
 use App\Models\Chat;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Route;
 
 Route::post('/webhook', [\App\Http\Controllers\TelegramBotController::class, 'handleWebhook'])->withoutMiddleware([\Illuminate\Foundation\Http\Middleware\VerifyCsrfToken::class]);
@@ -74,13 +75,19 @@ Route::get('/', function(Request $request) {
 
 Route::get('/a', function() {
 
-    dd(Chat::where('chat_id', 112233)->exists() === true);
-    echo 'exist?:' . (Chat::where('chat_id', 34)->exists() === true);
-dd( 5);
-    dd( Chat::where('chat_id', 34)->exists());
+
+    $chats = Chat::all();
+        Log::info('Chats: ' . $chats);
+    $logFile = storage_path('logs/laravel.log');
+    $logs = file_get_contents($logFile);
+    echo nl2br($logs);
+    dd($chats);
+
     Chat::create([
         'chat_id' => 112233,
     ]);
+
+
 
     Chat::where('chat_id', 112233)->exists();
 
