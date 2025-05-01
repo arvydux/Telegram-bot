@@ -10,4 +10,4 @@ Schedule::call(function () {
         (new App\Http\Controllers\TelegramBotController)->sendRecurringMessage($chat->chat_id, $text);
         Log::info('Message sent to chat: ' . $chat->chat_id);
     }
-})->dailyAt('18:07');
+})->dailyAt('16:10');
