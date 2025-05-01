@@ -50,16 +50,6 @@ class TelegramBotController extends Controller
         );
     }
 
-    public function setWebhook(Request $request)
-    {
-        $url = $request->input('url');
-
-        // Set the webhook URL for the Telegram bot
-        // ...
-
-        return response()->json(['status' => 'webhook set']);
-    }
-
     protected function subscribeChat($chatId): string
     {
         return Chat::create([
