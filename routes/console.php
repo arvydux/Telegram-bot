@@ -6,6 +6,8 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Schedule;
 
 Schedule::call(function () {
+    Log::info('Database connection: ' . config('database.default'));
+    Log::info('Chats count: ' . Chat::count());
     Log::info('Test 1: ');
     $chats = Chat::all();
     Log::info('Chats: ' . $chats);
@@ -17,4 +19,4 @@ Schedule::call(function () {
     }
     Log::info('Test 3: ');
 
-})->everyFiveMinutes();
+})->everyFiveSeconds();
