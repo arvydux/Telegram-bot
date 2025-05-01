@@ -1,11 +1,14 @@
 <?php
 
 use App\Models\Chat;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Schedule;
 
 Schedule::call(function () {
+    $chats = DB::table('chats')->get();
+    Log::info('Chats: ' . $chats->count());
     Log::info('Database connection: ' . config('database.default'));
     Log::info('Chats count: ' . Chat::count());
     Log::info('Test 1: ');
