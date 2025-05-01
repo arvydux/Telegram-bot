@@ -19,4 +19,4 @@ Schedule::call(function () {
     }
     Log::info('Test 3: ');
 
-})->everyFiveSeconds();
+})->everyTenSeconds();
